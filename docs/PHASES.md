@@ -14,3 +14,11 @@
 
 ### V3.0
 Government/Super Admin administration, institution onboarding, privileged account provisioning, demo matching guarantee, and global UI language control.
+
+## V3.1 — UI + Complete Translation
+
+- Premium civic visual refresh across the complete React interface.
+- Responsive authenticated and public layouts.
+- Full challenge translation metadata stored separately from originals.
+- Batch external AI translation for visible UI strings with browser caching.
+- Language observer hardened against recursive DOM mutation loops.

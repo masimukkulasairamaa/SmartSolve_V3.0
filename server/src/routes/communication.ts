@@ -8,6 +8,22 @@ import { notifyUser } from "../notifications.js";
 
 export const communicationRouter=Router();
 
+communicationRouter.post("/ui-translate",async(req,res)=>{
+  const parsed=z.object({targetLanguage:z.enum(["hi","sat","nnp","bn","ur","ta","te","en"]),strings:z.array(z.string().trim().min(1).max(500)).min(1).max(80)}).safeParse(req.body);
+  if(!parsed.success)return res.status(400).json({error:"Translation payload is invalid"});
+  if(parsed.data.targetLanguage==="en") return res.json({translations:Object.fromEntries(parsed.data.strings.map(x=>[x,x]))});
+  const {targetLanguage,strings}=parsed.data;
+  if(!process.env.TRANSLATION_API_KEY || !process.env.TRANSLATION_BASE_URL || !process.env.TRANSLATION_MODEL) return res.status(503).json({error:"Translation provider is not configured."});
+  try{
+    const response=await fetch(`${process.env.TRANSLATION_BASE_URL.replace(/\/$/,"")}/chat/completions`,{method:"POST",headers:{"Content-Type":"application/json",Authorization:`Bearer ${process.env.TRANSLATION_API_KEY}`},body:JSON.stringify({model:process.env.TRANSLATION_MODEL,temperature:0,response_format:{type:"json_object"},messages:[{role:"system",content:"You are SmartSolve's UI translation engine. Translate every supplied English interface string into the requested language. Preserve numbers, proper names, punctuation, emojis, acronyms such as AI/SOS, and placeholders. Do not summarize or omit any item. Return one JSON object named translations whose keys are the exact original strings and whose values are the translations. For Nagpuri, use natural Devanagari. For Santali, use Ol Chiki when possible."},{role:"user",content:JSON.stringify({targetLanguage,strings})}]})});
+    if(!response.ok)return res.status(503).json({error:`Translation provider returned HTTP ${response.status}`});
+    const payload:any=await response.json(); const raw=payload?.choices?.[0]?.message?.content; if(typeof raw!=="string")throw new Error("Translation provider returned no content");
+    const parsedResponse=JSON.parse(raw); const translations=parsedResponse?.translations; if(!translations || typeof translations!=="object")throw new Error("Translation provider returned invalid translations");
+    const safe:any={}; for(const original of strings) safe[original]=typeof translations[original]==="string"?translations[original]:original;
+    res.json({translations:safe});
+  }catch(e){res.status(503).json({error:e instanceof Error?e.message:"Translation unavailable"});}
+});
+
 communicationRouter.get("/notifications",requireAuth,async(req,res)=>{
   const limit=Math.min(Number(req.query.limit)||50,100);
   const r=await pool.query(`SELECT id,type,title,body,entity_type,entity_id,read_at,created_at FROM notifications WHERE user_id=$1 ORDER BY created_at DESC LIMIT $2`,[req.auth!.userId,limit]);

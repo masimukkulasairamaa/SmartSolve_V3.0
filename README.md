@@ -162,3 +162,12 @@ The deployment release includes the redesigned SmartSolve interface:
 - Demo walkthrough guarantee: when the Demo Citizen submits a challenge matching the Demo College's accepted category and exact accepted work type, that college is protected into the college match results even when the nearest-five pool would otherwise exclude it.
 - Global language selector in the top-right corner for English, Hindi, Santali and Nagpuri UI presentation. Existing challenge translation remains available for challenge content.
 - Migration 013 adds operational indexes for administration/onboarding.
+
+## V3.1 UI + Translation Upgrade
+
+- Reworked the visual system across authentication, navigation, forms, dashboards, AI matching, maps, projects and administration.
+- Added a complete challenge translation view covering title, description, location, category, support type, urgency and available AI analysis.
+- Added batch AI translation for the visible interface so the language control can translate substantially more than a small fixed dictionary.
+- UI translations are cached in the browser and the DOM observer avoids character-data feedback loops.
+- Added database migration `014_ui_translation.sql` for translated challenge metadata.
+- Translation requires `TRANSLATION_API_KEY`, `TRANSLATION_BASE_URL` and `TRANSLATION_MODEL`.
