@@ -70,50 +70,64 @@ form{display:grid;gap:16px}label{font-size:12px;font-weight:750;color:#56647a;di
 }
 
 
-/* Citizen My Reports — polished ticket/card presentation */
-.citizen-reports-panel{width:100%;min-width:0}
-.citizen-reports-panel .page-heading{align-items:flex-end}
-.reports-count{font-size:13px;font-weight:700;color:#5b6670;background:#f3f5f6;border:1px solid #dfe4e7;padding:8px 12px;border-radius:10px;white-space:nowrap}
-.report-list{display:grid;grid-template-columns:1fr;gap:16px;width:100%;min-width:0}
-.report-card{position:relative;width:100%;min-width:0;background:#fff;border:1px solid #dfe5e8;border-radius:16px;overflow:hidden;box-shadow:0 4px 16px rgba(20,35,45,.06);padding:22px 24px 18px}
-.report-card-accent{position:absolute;left:0;top:0;bottom:0;width:4px;background:#9aa5ad}
-.report-card-urgent .report-card-accent{background:#c62828}
-.report-card-high .report-card-accent{background:#d58b00}
-.report-card-normal .report-card-accent{background:#687b8a}
-.report-card-low .report-card-accent{background:#3d7d54}
-.report-card-top{display:flex;gap:16px;align-items:flex-start;min-width:0}
-.report-category-icon{width:58px;height:58px;min-width:58px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:30px;background:#f4f7f8;border:1px solid #dfe5e8}
-.report-card-heading{flex:1;min-width:0}
-.report-title-row{display:flex;align-items:flex-start;justify-content:space-between;gap:14px;min-width:0}
-.report-title-row h2{margin:0;font-size:21px;line-height:1.3;color:#17232c;overflow-wrap:anywhere}
-.report-category-label{margin-top:6px;color:#66737c;font-size:13px;text-transform:capitalize}
-.urgency-badge{display:inline-flex;align-items:center;gap:6px;padding:6px 10px;border-radius:8px;font-size:11px;font-weight:800;letter-spacing:.04em;white-space:nowrap;border:1px solid}
-.urgency-badge i{width:7px;height:7px;border-radius:50%;display:block;background:currentColor}
-.urgency-urgent{color:#b42323;background:#fff1f1;border-color:#e8b8b8}
-.urgency-high{color:#a96800;background:#fff7e8;border-color:#edd09b}
-.urgency-normal{color:#536a79;background:#f1f5f7;border-color:#d5e0e6}
-.urgency-low{color:#327047;background:#eff8f1;border-color:#c7dfcc}
-.report-info-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin:20px 0 16px;padding:14px 0;border-top:1px solid #edf0f2;border-bottom:1px solid #edf0f2}
-.report-info-item{min-width:0}
-.report-info-item span{display:block;font-size:11px;text-transform:uppercase;letter-spacing:.05em;color:#7b8790;margin-bottom:5px;font-weight:700}
-.report-info-item strong{display:block;font-size:13px;color:#273640;line-height:1.35;overflow-wrap:anywhere}
-.status-badge{display:inline-block;text-transform:capitalize}
-.report-description{margin:0;color:#52606a;font-size:14px;line-height:1.65;max-width:none}
-.report-footer{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-top:18px}
-.report-attachments{font-size:12px;color:#7a858d}
-.report-ai-toggle{font-weight:700}
+/* SmartSolve polished citizen reporting interface */
+.citizen-reports-page{width:100%;max-width:none}
+.citizen-reports-heading{align-items:center}
+.reports-summary{display:flex;align-items:baseline;gap:8px;padding:12px 16px;border:1px solid var(--line);background:var(--surface);border-radius:12px;white-space:nowrap}
+.reports-summary strong{font:600 28px Georgia,serif;color:var(--ink)}
+.reports-summary span{font-size:10px;text-transform:uppercase;letter-spacing:.1em;color:var(--muted)}
+.report-list{width:100%;display:grid;grid-template-columns:1fr;gap:16px}
+.report-card{position:relative;display:grid;grid-template-columns:68px minmax(0,1fr);gap:18px;width:100%;padding:22px 24px 20px 22px;background:var(--surface);border:1px solid var(--line);border-radius:16px;box-shadow:0 8px 28px rgba(25,31,40,.045);overflow:hidden}
+.report-card-accent{position:absolute;left:0;top:0;bottom:0;width:4px;background:#8a929e}
+.report-card.urgency-urgent .report-card-accent{background:#b42318}
+.report-card.urgency-high .report-card-accent{background:#c47a00}
+.report-card.urgency-normal .report-card-accent{background:#5b6b80}
+.report-card.urgency-low .report-card-accent{background:#4d7c5a}
+.report-card-icon{width:58px;height:58px;border-radius:14px;display:flex;align-items:center;justify-content:center;background:#f3f1eb;border:1px solid var(--line);font-size:28px;line-height:1}
+.report-card-body{min-width:0}
+.report-card-top{display:flex;align-items:flex-start;justify-content:space-between;gap:18px}
+.report-title-wrap{min-width:0}
+.report-eyebrow{display:block;margin-bottom:5px;font-size:9px;letter-spacing:.09em;text-transform:uppercase;color:#827e76;font-weight:750}
+.report-card h2{margin:0;font:600 23px/1.25 Georgia,serif;color:var(--ink);overflow-wrap:anywhere}
+.urgency-badge{display:inline-flex;align-items:center;gap:6px;flex:0 0 auto;padding:7px 10px;border:1px solid currentColor;border-radius:7px;font-size:10px;font-weight:800;letter-spacing:.08em;white-space:nowrap}
+.urgency-badge span{font-size:8px}
+.urgency-badge-urgent{color:#a61b1b;background:#fff0ef}
+.urgency-badge-high{color:#9a5b00;background:#fff7e6}
+.urgency-badge-normal{color:#536276;background:#f2f5f8}
+.urgency-badge-low{color:#416b4d;background:#eef7f0}
+.report-description{margin:9px 0 16px!important;max-width:none!important;font-size:12px!important;line-height:1.7!important;color:var(--muted)}
+.report-facts{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.report-facts>div{min-width:0;padding:12px 14px 11px 0;margin-right:14px;border-right:1px solid var(--line)}
+.report-facts>div:last-child{border-right:0;margin-right:0}
+.report-facts span{display:block;margin-bottom:5px;font-size:8px;text-transform:uppercase;letter-spacing:.08em;color:#918c83}
+.report-facts strong{display:block;font-size:11px;line-height:1.4;color:var(--ink);overflow-wrap:anywhere}
+.status-badge{display:inline-flex!important;width:max-content;max-width:100%;padding:4px 7px;background:#f1eee8;border:1px solid var(--line);border-radius:5px;font-size:9px!important}
+.report-card-footer{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-top:14px}
+.report-trust{font-size:10px;line-height:1.45;color:#8b877f}
+.report-details-action{flex:0 0 auto;font-size:10px!important}
+.reports-empty{min-height:280px;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.reports-empty .empty-icon{font-size:30px;margin-bottom:8px}
+.reports-empty h3{margin:0 0 6px;font:600 22px Georgia,serif}
+.reports-empty p{margin:0;max-width:440px;color:var(--muted);font-size:12px;line-height:1.6}
 @media(max-width:900px){
-  .report-info-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .report-facts{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .report-facts>div:nth-child(2){border-right:0;margin-right:0}
+  .report-facts>div:nth-child(-n+2){border-bottom:1px solid var(--line)}
 }
-@media(max-width:620px){
-  .citizen-reports-panel .page-heading{align-items:flex-start}
-  .reports-count{display:none}
-  .report-card{padding:18px 17px 16px}
-  .report-card-top{gap:12px}
-  .report-category-icon{width:48px;height:48px;min-width:48px;font-size:25px}
-  .report-title-row{display:block}
-  .report-title-row h2{font-size:18px;margin-bottom:10px}
-  .urgency-badge{font-size:10px;padding:5px 8px}
-  .report-info-grid{grid-template-columns:1fr;gap:13px;margin:16px 0 14px}
-  .report-footer{align-items:flex-start;flex-direction:column}
+@media(max-width:700px){
+  .citizen-reports-heading{align-items:flex-start}
+  .reports-summary{padding:9px 12px}
+  .report-card{grid-template-columns:50px minmax(0,1fr);gap:12px;padding:17px 16px 16px 17px}
+  .report-card-icon{width:48px;height:48px;font-size:23px;border-radius:12px}
+  .report-card-top{flex-direction:column;gap:10px}
+  .report-card h2{font-size:20px}
+  .urgency-badge{align-self:flex-start}
+  .report-facts{grid-template-columns:1fr}
+  .report-facts>div{border-right:0!important;border-bottom:1px solid var(--line);margin-right:0;padding-right:0}
+  .report-facts>div:last-child{border-bottom:0}
+  .report-card-footer{align-items:flex-start;flex-direction:column}
+}
+@media(max-width:420px){
+  .report-card{grid-template-columns:1fr}
+  .report-card-icon{width:46px;height:46px}
 }
