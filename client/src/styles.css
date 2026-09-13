@@ -68,3 +68,52 @@ form{display:grid;gap:16px}label{font-size:12px;font-weight:750;color:#56647a;di
   .topbar .global-language select{max-width:82px}
   .topbar .topbar-actions{gap:6px}
 }
+
+
+/* Citizen My Reports — polished ticket/card presentation */
+.citizen-reports-panel{width:100%;min-width:0}
+.citizen-reports-panel .page-heading{align-items:flex-end}
+.reports-count{font-size:13px;font-weight:700;color:#5b6670;background:#f3f5f6;border:1px solid #dfe4e7;padding:8px 12px;border-radius:10px;white-space:nowrap}
+.report-list{display:grid;grid-template-columns:1fr;gap:16px;width:100%;min-width:0}
+.report-card{position:relative;width:100%;min-width:0;background:#fff;border:1px solid #dfe5e8;border-radius:16px;overflow:hidden;box-shadow:0 4px 16px rgba(20,35,45,.06);padding:22px 24px 18px}
+.report-card-accent{position:absolute;left:0;top:0;bottom:0;width:4px;background:#9aa5ad}
+.report-card-urgent .report-card-accent{background:#c62828}
+.report-card-high .report-card-accent{background:#d58b00}
+.report-card-normal .report-card-accent{background:#687b8a}
+.report-card-low .report-card-accent{background:#3d7d54}
+.report-card-top{display:flex;gap:16px;align-items:flex-start;min-width:0}
+.report-category-icon{width:58px;height:58px;min-width:58px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:30px;background:#f4f7f8;border:1px solid #dfe5e8}
+.report-card-heading{flex:1;min-width:0}
+.report-title-row{display:flex;align-items:flex-start;justify-content:space-between;gap:14px;min-width:0}
+.report-title-row h2{margin:0;font-size:21px;line-height:1.3;color:#17232c;overflow-wrap:anywhere}
+.report-category-label{margin-top:6px;color:#66737c;font-size:13px;text-transform:capitalize}
+.urgency-badge{display:inline-flex;align-items:center;gap:6px;padding:6px 10px;border-radius:8px;font-size:11px;font-weight:800;letter-spacing:.04em;white-space:nowrap;border:1px solid}
+.urgency-badge i{width:7px;height:7px;border-radius:50%;display:block;background:currentColor}
+.urgency-urgent{color:#b42323;background:#fff1f1;border-color:#e8b8b8}
+.urgency-high{color:#a96800;background:#fff7e8;border-color:#edd09b}
+.urgency-normal{color:#536a79;background:#f1f5f7;border-color:#d5e0e6}
+.urgency-low{color:#327047;background:#eff8f1;border-color:#c7dfcc}
+.report-info-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin:20px 0 16px;padding:14px 0;border-top:1px solid #edf0f2;border-bottom:1px solid #edf0f2}
+.report-info-item{min-width:0}
+.report-info-item span{display:block;font-size:11px;text-transform:uppercase;letter-spacing:.05em;color:#7b8790;margin-bottom:5px;font-weight:700}
+.report-info-item strong{display:block;font-size:13px;color:#273640;line-height:1.35;overflow-wrap:anywhere}
+.status-badge{display:inline-block;text-transform:capitalize}
+.report-description{margin:0;color:#52606a;font-size:14px;line-height:1.65;max-width:none}
+.report-footer{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-top:18px}
+.report-attachments{font-size:12px;color:#7a858d}
+.report-ai-toggle{font-weight:700}
+@media(max-width:900px){
+  .report-info-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media(max-width:620px){
+  .citizen-reports-panel .page-heading{align-items:flex-start}
+  .reports-count{display:none}
+  .report-card{padding:18px 17px 16px}
+  .report-card-top{gap:12px}
+  .report-category-icon{width:48px;height:48px;min-width:48px;font-size:25px}
+  .report-title-row{display:block}
+  .report-title-row h2{font-size:18px;margin-bottom:10px}
+  .urgency-badge{font-size:10px;padding:5px 8px}
+  .report-info-grid{grid-template-columns:1fr;gap:13px;margin:16px 0 14px}
+  .report-footer{align-items:flex-start;flex-direction:column}
+}

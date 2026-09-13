@@ -134,7 +134,66 @@ function LiveIssueFeed({feed,onReport,user}:{feed:Challenge[];onReport:()=>void;
   </span>
 ))}{points.length===0&&<div className="map-empty">Live mapped issues will appear here</div>}<div className="map-key"><span><i className="pin-dot urgent-dot"/>Urgent</span><span><i className="pin-dot"/>High priority</span></div></div><aside className="feed-list"><div className="feed-list-head"><strong>Latest issues</strong><span>{feed.length} open</span></div>{feed.slice(0,7).map(x=><article className="feed-item" key={x.id}><div className="feed-dot problem-category-icon">{getProblemIcon(x.category)}</div><div><div className="feed-meta"><span>{x.category}</span><span>{x.district||'Jharkhand'}</span></div><h3>{x.title}</h3><p>{x.block?`${x.block} · `:''}{x.request_type}</p></div></article>)}{feed.length===0&&<div className="feed-empty">No public issues are mapped yet.</div>}</aside></div><div className="feed-bottom"><div><strong>AI routing</strong><span>Once a report is submitted, the issue is analyzed for category, expertise, urgency and accepted work type.</span></div><div><strong>Partner fit</strong><span>Colleges and companies are scored on whether they accept this kind of problem and whether their declared expertise fits it.</span></div><div><strong>Privacy</strong><span>Exact coordinates are used for routing but are not displayed as latitude and longitude to users.</span></div></div></section>}
 
-function CitizenChallenges({challenges,selectedChallenge,loadAI,aiAnalysis,duplicates,matches,aiBusy,matchBusy,rerunAI,refreshMatches}:{challenges:Challenge[];selectedChallenge:string|null;loadAI:(id:string)=>void;aiAnalysis:AIAnalysis|null;duplicates:DuplicateFlag[];matches:Matches;aiBusy:boolean;matchBusy:boolean;rerunAI:(id:string)=>void;refreshMatches:(id:string)=>void}){return <section className="page-panel"><div className="page-heading"><div><div className="hero-kicker">YOUR REPORTS</div><h1>My issues</h1><p>See how SmartSolve understood each report and which institutions are the strongest fit.</p></div></div>{challenges.length===0?<div className="empty large-empty">You have not reported an issue yet.</div>:<div className="report-list">{challenges.map(c=><article className="report-row" key={c.id}><div className="report-icon">{getProblemIcon(c.category)}</div><div className="report-status"><span>{c.status.replaceAll('_',' ')}</span><small>{c.urgency_hint}</small></div><div className="report-main"><div className="opportunity-meta"><span>{c.category}</span><span>{c.request_type}</span><span>{c.district||'Location captured privately'}</span></div><h2>{c.title}</h2><p>{c.description}</p><div className="meta">{c.block?`${c.block} · `:''}{c.media_count} attachment{c.media_count===1?'':'s'}</div><button className="text-link" onClick={()=>loadAI(c.id)}>{selectedChallenge===c.id?'Hide AI routing':'See AI routing'}</button>{selectedChallenge===c.id&&<AIAndMatches analysis={aiAnalysis} duplicates={duplicates} matches={matches} busy={aiBusy} matchBusy={matchBusy} onRerun={()=>rerunAI(c.id)} onRefreshMatches={()=>refreshMatches(c.id)}/>}</div></article>)}</div>}</section>}
+function CitizenChallenges({challenges,selectedChallenge,loadAI,aiAnalysis,duplicates,matches,aiBusy,matchBusy,rerunAI,refreshMatches}:{challenges:Challenge[];selectedChallenge:string|null;loadAI:(id:string)=>void;aiAnalysis:AIAnalysis|null;duplicates:DuplicateFlag[];matches:Matches;aiBusy:boolean;matchBusy:boolean;rerunAI:(id:string)=>void;refreshMatches:(id:string)=>void}){
+  const urgencyClass=(urgency:string)=>{
+    const key=(urgency||'NORMAL').toUpperCase();
+    if(key==='URGENT') return 'urgent';
+    if(key==='HIGH') return 'high';
+    if(key==='LOW') return 'low';
+    return 'normal';
+  };
+  const statusLabel=(status:string)=>status.replaceAll('_',' ');
+  return <section className="page-panel citizen-reports-panel">
+    <div className="page-heading">
+      <div>
+        <div className="hero-kicker">YOUR REPORTS</div>
+        <h1>My reports</h1>
+        <p>Track every issue you reported, its urgency, progress and how SmartSolve routes it to the right institutions.</p>
+      </div>
+      <div className="reports-count">{challenges.length} {challenges.length===1?'report':'reports'}</div>
+    </div>
+    {challenges.length===0
+      ? <div className="empty large-empty">You have not reported an issue yet.</div>
+      : <div className="report-list">
+        {challenges.map(c=>{
+          const urgency=urgencyClass(c.urgency_hint);
+          return <article className={`report-card report-card-${urgency}`} key={c.id}>
+            <div className="report-card-accent"/>
+            <div className="report-card-top">
+              <div className="report-category-icon" aria-label={`${c.category} category`}>
+                {getProblemIcon(c.category)}
+              </div>
+              <div className="report-card-heading">
+                <div className="report-title-row">
+                  <h2>{c.title}</h2>
+                  <span className={`urgency-badge urgency-${urgency}`}><i/> {c.urgency_hint||'NORMAL'}</span>
+                </div>
+                <div className="report-category-label">{c.category}</div>
+              </div>
+            </div>
+
+            <div className="report-info-grid">
+              <div className="report-info-item"><span>Location</span><strong>{c.district||'Location captured privately'}</strong></div>
+              <div className="report-info-item"><span>Request type</span><strong>{c.request_type.replaceAll('_',' ')}</strong></div>
+              <div className="report-info-item"><span>Submitted</span><strong>{new Date(c.created_at).toLocaleDateString()}</strong></div>
+              <div className="report-info-item"><span>Workflow status</span><strong className="status-badge">{statusLabel(c.status)}</strong></div>
+            </div>
+
+            <p className="report-description">{c.description}</p>
+
+            <div className="report-footer">
+              <div className="report-attachments">{c.block?`${c.block} · `:''}{c.media_count} attachment{c.media_count===1?'':'s'}</div>
+              <button className="text-link report-ai-toggle" onClick={()=>loadAI(c.id)}>
+                {selectedChallenge===c.id?'Hide AI routing':'See AI routing'}
+              </button>
+            </div>
+
+            {selectedChallenge===c.id&&<AIAndMatches analysis={aiAnalysis} duplicates={duplicates} matches={matches} busy={aiBusy} matchBusy={matchBusy} onRerun={()=>rerunAI(c.id)} onRefreshMatches={()=>refreshMatches(c.id)}/>}
+          </article>
+        })}
+      </div>}
+  </section>
+}
 function AIAndMatches({analysis,duplicates,matches,busy,matchBusy,onRerun,onRefreshMatches}:{analysis:AIAnalysis|null;duplicates:DuplicateFlag[];matches:Matches;busy:boolean;matchBusy:boolean;onRerun:()=>void;onRefreshMatches:()=>void}){if(busy&&!analysis)return <div className="ai-panel"><div className="ai-loading">Loading challenge intelligence…</div></div>;if(!analysis)return <div className="ai-panel"><div className="ai-loading">AI analysis is not available yet.</div></div>;return <div className="ai-panel"><div className="ai-head"><div><p className="eyebrow">AI INTELLIGENCE</p><strong>{analysis.category_name} · {analysis.subcategory}</strong></div><button className="ghost-btn" onClick={onRerun} disabled={busy}>{busy?'Refreshing…':'Re-run AI'}</button></div><p className="ai-summary">{analysis.summary}</p><div className="ai-grid"><div><span>Urgency</span><b>{analysis.urgency}</b></div><div><span>Quality</span><b>{analysis.quality_score}/100</b></div><div><span>Provider</span><b>{analysis.provider==='external'?'External AI':'Fallback rules'}</b></div></div><div className="ai-section"><span>Expertise tags</span><div className="chips">{analysis.expertise_tags.map(x=><em key={x}>{x}</em>)}</div></div>{duplicates.length>0&&<div className="duplicate-box"><strong>Possible duplicate challenges</strong>{duplicates.map(d=><div className="duplicate" key={d.id}><b>{Math.round(Number(d.similarity_score)*100)}% similarity</b> · {d.possible_duplicate_title}</div>)}</div>}<div className="match-panel"><div className="match-head"><div><p className="eyebrow">AI PARTNER FIT</p><strong>Best-fit institutions</strong></div><button className="ghost-btn" onClick={onRefreshMatches} disabled={matchBusy}>{matchBusy?'Matching…':'Refresh matches'}</button></div><MatchGroup title="Colleges & universities · nearest eligible 5" matches={matches.colleges} empty="No eligible college found yet."/><MatchGroup title="Companies & innovation partners · highest fit" matches={matches.industries} empty="No relevant industry partner found."/></div></div>}
 function MatchGroup({title,matches,empty}:{title:string;matches:Match[];empty:string}){return <div className="match-group"><div className="match-group-title"><h3>{title}</h3><span>{matches.length} results</span></div>{matches.length===0?<div className="match-empty">{empty}</div>:<div className="match-list">{matches.map(m=><article className="match-card" key={m.id}><div className="match-card-top"><div><strong>{m.name}</strong><span>{matchTypeLabel(m.organization_type)} · {m.district||'District not listed'}</span></div><div className="match-score"><b>{Math.round(Number(m.match_score))}%</b><small>{formatDistance(m.distance_km)}</small></div></div><div className="match-reasons">{m.reasons.map((r,i)=><em key={i}>✓ {r}</em>)}</div><div className="match-bars"><span>Category {Math.round(Number(m.category_score))}%</span><span>Expertise {Math.round(Number(m.expertise_score))}%</span><span>Request {Math.round(Number(m.request_type_score))}%</span></div></article>)}</div>}</div>}
 function ChallengeForm({submit,busy}:{submit:(e:FormEvent<HTMLFormElement>)=>void;busy:boolean}){return <section className="page-panel report-page"><div className="page-heading"><div><div className="hero-kicker">NEW PUBLIC ISSUE</div><h1>Report an issue</h1><p>Describe the problem. SmartSolve will classify it, assess urgency and find institutions that can take it forward.</p></div><div className="secure-note">⌖ Location is captured privately when available.</div></div><form onSubmit={submit} encType="multipart/form-data" className="report-form"><div className="form-card"><label>Issue title<input name="title" required minLength={5} maxLength={180} placeholder="e.g. Drinking water shortage near the community centre"/></label><label>What is happening?<textarea name="description" required minLength={20} maxLength={10000} rows={7} placeholder="Describe the problem, who is affected and what you have observed."/></label><div className="field-grid"><label>District<select name="district" defaultValue=""><option value="">Select district</option>{['Chatra','Deoghar','Dhanbad','Dumka','East Singhbhum','Garhwa','Giridih','Godda','Gumla','Hazaribagh','Jamtara','Khunti','Koderma','Latehar','Lohardaga','Pakur','Ramgarh','Ranchi','Sahibganj','Seraikela Kharsawan','Simdega','West Singhbhum','Palamu'].map(x=><option key={x}>{x}</option>)}</select></label><label>Block<select name="block" defaultValue=""><option value="">Select block</option>{['Chatra','Dhanbad','Daltonganj','Manoharpur','Medininagar','Ranchi Sadar','Simdega','Tisri','Tundi','Other / not sure'].map(x=><option key={x}>{x}</option>)}</select></label></div><div className="field-grid"><label>Category<select name="categorySlug" defaultValue="education">{categories.map(([v,l])=><option value={v} key={v}>{l}</option>)}</select></label><label>How can others help?<select name="requestTypeSlug" defaultValue="student-project">{requests.map(([v,l])=><option value={v} key={v}>{l}</option>)}</select></label></div><div className="field-grid"><label>Urgency<select name="urgencyHint" defaultValue="NORMAL"><option>LOW</option><option>NORMAL</option><option>HIGH</option><option>URGENT</option></select></label><label>Language<select name="preferredLanguage" defaultValue="en"><option value="en">English</option><option value="hi">Hindi</option><option value="sat">Santali</option><option value="nnp">Nagpuri</option></select></label></div><label>Location / landmark<input name="address" placeholder="Village, street, landmark or nearby public place"/></label></div><div className="form-card evidence-card"><div className="upload-title">Attach Geo-tagged Photo/Video</div><p>Visual evidence helps the AI understand the issue and helps partners assess it faster.</p><label className="upload-drop"><span className="upload-icon">＋</span><strong>Choose photos, videos or documents</strong><small>Images, MP4/WebM, PDF, DOC/DOCX · up to 8 files</small><input name="media" type="file" multiple accept="image/*,video/mp4,video/webm,application/pdf,.doc,.docx"/></label><label className="check"><input name="allowContact" type="checkbox"/> Allow a project team to request my contact details</label><div className="privacy">Your contact details stay private until you approve a real project participant.</div><button className="primary-btn wide" disabled={busy}>{busy?'Submitting…':'Submit issue'}</button></div></form></section>}
